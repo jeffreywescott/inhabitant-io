@@ -1,6 +1,7 @@
 const fetch = require('node-fetch')
 const qs = require('query-string')
 const addressParser = require('parse-address')
+const cors = require('cors')({origin: true})
 
 const firebaseFunctions = require('firebase-functions')
 const firebaseAdmin = require('firebase-admin')
@@ -91,18 +92,20 @@ const censusBlockForAddress = address => {
 }
 
 exports.district = firebaseFunctions.https.onRequest((req, res) => {
-  try {
-    const {lng, lat, address} = req.query
-    if (!(lng && lat) && !address) {
-      throw new Error('missing required parameters: lng and lat OR address')
-    }
-    if (lng && lat) {
-      return censusBlockForCoordinates(lng, lat)
+  cors(req, res, () => {
+    try {
+      const {lng, lat, address} = req.query
+      if (!(lng && lat) && !address) {
+        throw new Error('missing required parameters: lng and lat OR address')
+      }
+      if (lng && lat) {
+        return censusBlockForCoordinates(lng, lat)
+          .then(json => res.status(200).json(json))
+      }
+      return censusBlockForAddress(address)
         .then(json => res.status(200).json(json))
+    } catch (err) {
+      console.error(err)
     }
-    return censusBlockForAddress(address)
-      .then(json => res.status(200).json(json))
-  } catch (err) {
-    console.error(err)
-  }
+  })
 })
