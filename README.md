@@ -15,7 +15,8 @@ curl -s "http://localhost:8010/paidfor/us-central1/district?lng=-122.27536&lat=3
 
 ## Notes
 
-This currently depends on the [US Census Bureau's Geocoder API][us-census-geocoder].
+- This currently depends on the [US Census Bureau's Geocoder API][us-census-geocoder].
+- Right now, this only works to find voting districts in Berkeley, CA.
 
 <!-- links -->
 
