@@ -2,18 +2,31 @@
   "name": "inhabitant-io",
   "version": "1.0.0",
   "description": "inhabitant API",
+  "main": "src/api",
   "engines": {
     "node": "6.11.5"
   },
-  "main": "src/api/index.js",
   "author": "Jeffrey Wescott <jeffrey.wescott@gmail.com>",
   "license": "ISC",
   "private": false,
+  "scripts": {
+    "lint": "./node_modules/.bin/eslint .",
+    "serve": "firebase serve --only functions",
+    "shell": "firebase experimental:functions:shell",
+    "start": "npm run shell",
+    "deploy": "firebase deploy --only functions",
+    "logs": "firebase functions:log"
+  },
   "dependencies": {
-    "@google-cloud/functions-emulator": "^1.0.0-beta.3",
     "firebase-admin": "^5.9.1",
+    "firebase-functions": "^0.8.1",
+    "firebase-tools": "^3.17.4",
     "node-fetch": "^2.0.0",
     "parse-address": "^0.0.10",
     "query-string": "^5.1.0"
+  },
+  "devDependencies": {
+    "eslint": "^4.12.0",
+    "eslint-plugin-promise": "^3.6.0"
   }
 }

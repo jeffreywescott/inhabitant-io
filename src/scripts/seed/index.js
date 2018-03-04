@@ -1,6 +1,10 @@
 const util = require('util')
 const firebaseAdmin = require('firebase-admin')
 
+const {getBlockRef} = require('../../db')
+
+// This script -SHOULD- be idempotent and safe to run multiple times in a row.
+
 const votingDistricts = {
   "06001": { // CA, Alameda
     "cities": {
@@ -38,7 +42,7 @@ const parseCityVotingDistricts = () => {
 const run = (serviceAccount, databaseURL) => {
   firebaseAdmin.initializeApp({
     credential: firebaseAdmin.credential.cert(serviceAccount),
-    databaseURL: 'https://inhabitant-io.firebaseio.com'
+    databaseURL
   })
   const db = firebaseAdmin.firestore()
 
@@ -46,17 +50,8 @@ const run = (serviceAccount, databaseURL) => {
   // console.log(util.inspect(geoId2VotingDistrict, {depth: 6}))
   Object.keys(geoId2VotingDistrict).forEach(geoId => {
     const votingDistrict = geoId2VotingDistrict[geoId]
-    const state = geoId.slice(0, 2)
-    const county = geoId.slice(2, 5)
-    const tract = geoId.slice(5, 11)
-    const block = geoId.slice(11)
 
-    // console.log(`s-${state}.c-${county}.t-${tract}.b-${block} => d-${votingDistrict}`)
-    db.collection('states').doc(`s-${state}`)
-      .collection('counties').doc(`c-${county}`)
-      .collection('tracts').doc(`t-${tract}`)
-      .collection('blocks').doc(`b-${block}`)
-      .set({votingDistrict}, {merge: true})
+    getBlockRef(db, geoId).set({votingDistrict}, {merge: true})
   })
 }
 
