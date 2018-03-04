@@ -11,6 +11,7 @@
   "private": false,
   "dependencies": {
     "@google-cloud/functions-emulator": "^1.0.0-beta.3",
+    "firebase-admin": "^5.9.1",
     "node-fetch": "^2.0.0",
     "parse-address": "^0.0.10",
     "query-string": "^5.1.0"
